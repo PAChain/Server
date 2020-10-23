@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pachain.voting.service.entities.mappers.VoteDetailMapper">
+    <resultMap id="BaseResultMap" type="com.pachain.voting.service.entities.modules.VoteDetail" >
+        <result column="State" property="state" jdbcType="VARCHAR"/>
+        <result column="County" property="county" jdbcType="VARCHAR"/>
+        <result column="PrecinctNumber" property="precinctNumber" jdbcType="VARCHAR"/>
+        <result column="VotingDate" property="votingDate" jdbcType="DATE"/>
+        <result column="Count" property="count" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="VoteDetailCount" type="java.lang.Integer">
+        <result column="count"/>
+    </resultMap>
+    <select id="queryVoted" resultMap="BaseResultMap,VoteDetailCount">
+        call csp_queryVoted(#{chainCode},#{state},#{county},#{precinctNumber},#{ballotnumber},#{date},#{start},#{end},#{limit},#{offset});
+    </select>
+</mapper>

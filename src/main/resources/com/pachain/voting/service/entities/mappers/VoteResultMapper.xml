@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pachain.voting.service.entities.mappers.VoteResultMapper">
+    <resultMap id="BaseResultMap" type="com.pachain.voting.service.entities.modules.VoteResult" >
+        <result column="txid" property="txid" jdbcType="VARCHAR"/>
+        <result column="VotingNumber" property="votingNumber" jdbcType="VARCHAR"/>
+        <result column="VerificationCode" property="verificationCode" jdbcType="VARCHAR"/>
+        <result column="Key" property="key" jdbcType="VARCHAR"/>
+        <result column="State" property="state" jdbcType="VARCHAR"/>
+        <result column="County" property="county" jdbcType="VARCHAR"/>
+        <result column="PrecinctNumber" property="precinctNumber" jdbcType="VARCHAR"/>
+        <result column="ElectionID" property="electionID" jdbcType="INTEGER"/>
+        <result column="SeatID" property="seatID" jdbcType="INTEGER"/>
+        <result column="CandidateID" property="candidateID" jdbcType="INTEGER"/>
+        <result column="CandidateName" property="candidateName" jdbcType="INTEGER"/>
+        <result column="VotingDate" property="votingDate" jdbcType="DATE"/>
+        <result column="Count" property="count" jdbcType="INTEGER"/>
+        <result column="Percent" property="percent" jdbcType="FLOAT"/>
+    </resultMap>
+    <resultMap id="VoteResultCount" type="java.lang.Integer">
+        <result column="count"/>
+    </resultMap>
+    <resultMap id="VoteResultStatistics" type="com.pachain.voting.service.entities.modules.VoteResultStatistics">
+        <result column="VotedCount" property="votedCount" jdbcType="INTEGER"/>
+        <result column="VoteCount" property="voteCount" jdbcType="INTEGER"/>
+        <result column="Percent" property="percent" jdbcType="FLOAT"/>
+        <result column="LatedVoteDate" property="latedVoteDate" jdbcType="DATE"/>
+        <result column="LatedVotedDate" property="latedVotedDate" jdbcType="DATE"/>
+    </resultMap>
+    <select id="queryVoteResult" resultMap="BaseResultMap,VoteResultCount">
+        select SQL_CALC_FOUND_ROWS * from voted_result
+        <trim prefix="where" suffixOverrides="and">
+            <if test="key != null and key!=''">
+                `Key`=#{key} and
+            </if>
+            <if test="state != null and state!=''">
+                State=#{state} and
+            </if>
+            <if test="county != null and county!=''">
+                County=#{county} and
+            </if>
+            <if test="precinctNumber != null and precinctNumber!=''">
+                PrecinctNumber=#{precinctNumber} and
+            </if>
+            <if test="seatID != null and seatID>0">
+                SeatID=#{seatID} and
+            </if>
+            <if test="date != null and date!=''">
+                VotingDate=#{date} and
+            </if>
+            <if test="start != null and start!=''">
+                VotingDate&gt;=#{start} and
+            </if>
+            <if test="end != null and end!=''">
+                VotingDate&lt;=#{end} and
+            </if>
+        </trim>
+          order by VotingDate desc,State,County,PrecinctNumber,ElectionID,SeatID,CandidateID limit #{offset},#{limit};
+        SELECT FOUND_ROWS() as count;
+    </select>
+    <select id="getVoteResult" resultMap="BaseResultMap,VoteResultStatistics">
+        call csp_getvoteresult(#{chainCode},#{electionID},#{state},#{county},#{precinctNumber});
+    </select>
+</mapper>

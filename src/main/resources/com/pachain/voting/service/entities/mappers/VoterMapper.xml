@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pachain.voting.service.entities.mappers.VoterMapper">
+    <resultMap id="BaseResultMap" type="com.pachain.voting.service.entities.modules.Voter" >
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="VoterID" property="voterID" jdbcType="VARCHAR"/>
+        <result column="PrecinctID" property="precinctID" jdbcType="VARCHAR"/>
+        <result column="PrecinctNumber" property="precinctNumber" jdbcType="VARCHAR"/>
+        <result column="Email" property="email" jdbcType="VARCHAR"/>
+        <result column="FirstName" property="firstName" jdbcType="VARCHAR"/>
+        <result column="MiddleName" property="middleName" jdbcType="VARCHAR"/>
+        <result column="LastName" property="lastName" jdbcType="VARCHAR"/>
+        <result column="NameSuffix" property="nameSuffix" jdbcType="VARCHAR"/>
+        <result column="Cellphone" property="cellphone" jdbcType="VARCHAR"/>
+        <result column="State" property="state" jdbcType="VARCHAR"/>
+        <result column="County" property="county" jdbcType="VARCHAR"/>
+        <result column="City" property="city" jdbcType="VARCHAR"/>
+        <result column="Address" property="address" jdbcType="VARCHAR"/>
+        <result column="Photo" property="photo" jdbcType="VARCHAR"/>
+        <result column="CertificateType" property="certificateType" jdbcType="VARCHAR"/>
+        <result column="Certificate" property="certificate" jdbcType="VARCHAR"/>
+        <result column="WalletID" property="walletID" jdbcType="VARCHAR"/>
+        <result column="WalletPublicKey" property="walletPublicKey" jdbcType="VARCHAR"/>
+        <result column="WalletPrivateKey" property="walletPrivateKey" jdbcType="VARCHAR"/>
+        <result column="WalletMSPID" property="walletMSPID" jdbcType="VARCHAR"/>
+        <result column="WalletType" property="walletType" jdbcType="VARCHAR"/>
+        <result column="WalletVersion" property="walletVersion" jdbcType="VARCHAR"/>
+        <result column="KeyType" property="keyType" jdbcType="VARCHAR"/>
+        <result column="PublicKey" property="publicKey" jdbcType="VARCHAR"/>
+        <result column="EncryptKey" property="encryptKey" jdbcType="VARCHAR"/>
+        <result column="AccessToken" property="accessToken" jdbcType="VARCHAR"/>
+        <result column="RegisterDate" property="registerDate" jdbcType="DATE"/>
+        <result column="LastModify" property="lastModify" jdbcType="TIMESTAMP"/>
+        <result column="txid" property="txid" jdbcType="VARCHAR"/>
+        <result column="Approved" property="approved" jdbcType="DATE"/>
+        <result column="ApprovedDate" property="approvedDate" jdbcType="DATE"/>
+    </resultMap>
+    <select id="loadByVoterID" resultMap="BaseResultMap">
+        select a.*,b.PublicKey,b.EncryptKey,b.KeyType from voters a left join voters_certificates b on a.ID=b.VoterID and b.Status=1 where a.VoterID=#{voterID}
+    </select>
+    <select id="loadByEmail" resultMap="BaseResultMap">
+        select a.*,b.PublicKey,b.EncryptKey,b.KeyType from voters a left join voters_certificates b on a.ID=b.VoterID and b.Status=1 where a.Email=#{email}
+    </select>
+    <select id="loadByPublicKey" resultMap="BaseResultMap">
+        select a.*,b.PublicKey,b.EncryptKey,b.KeyType from voters a,voters_certificates b where a.ID=b.VoterID and b.Status=1 and b.PublicKey=#{publicKey}
+    </select>
+    <select id="loadByWalletPublicKey" resultMap="BaseResultMap">
+        select a.*,b.PublicKey,b.EncryptKey,b.KeyType from voters a left join voters_certificates b on a.ID=b.VoterID and b.Status=1 where a.WalletPublicKey=#{publicKey}
+    </select>
+    <select id="loadByAccessToken" resultMap="BaseResultMap">
+        select a.*,b.PublicKey,b.EncryptKey,b.KeyType from voters a left join voters_certificates b on a.ID=b.VoterID and b.Status=1 where a.AccessToken=#{accessToken}
+    </select>
+    <insert id="register" parameterType="com.pachain.voting.service.entities.modules.Voter" keyProperty="id" useGeneratedKeys="true">
+        insert into voters
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="precinctID != null">
+                PrecinctID,
+            </if>
+            <if test="precinctNumber != null">
+                PrecinctNumber,
+            </if>
+            <if test="voterID != null">
+                VoterID,
+            </if>
+            <if test="email != null">
+                Email,
+            </if>
+            <if test="firstName != null">
+                FirstName,
+            </if>
+            <if test="middleName != null">
+                MiddleName,
+            </if>
+            <if test="lastName != null">
+                LastName,
+            </if>
+            <if test="nameSuffix != null">
+                NameSuffix,
+            </if>
+            <if test="cellphone != null">
+                Cellphone,
+            </if>
+            <if test="state != null">
+                State,
+            </if>
+            <if test="county != null">
+                County,
+            </if>
+            <if test="city != null">
+                City,
+            </if>
+            <if test="address != null">
+                Address,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="precinctID != null">
+                #{precinctID,jdbcType=VARCHAR},
+            </if>
+            <if test="precinctNumber != null">
+                #{precinctNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="voterID != null">
+                #{voterID,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="firstName != null">
+                 #{firstName,jdbcType=VARCHAR},
+            </if>
+            <if test="middleName != null">
+                #{middleName,jdbcType=VARCHAR},
+            </if>
+            <if test="lastName != null">
+                #{lastName,jdbcType=VARCHAR},
+            </if>
+            <if test="nameSuffix != null">
+                #{nameSuffix,jdbcType=VARCHAR},
+            </if>
+            <if test="cellphone != null">
+                #{cellphone,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                #{county,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" >
+        update voters
+        <set>
+            <if test="precinctID != null">
+                precinctID=#{precinctID,jdbcType=VARCHAR},
+            </if>
+            <if test="precinctNumber != null">
+                precinctNumber=#{precinctNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="voterID != null">
+                voterID=#{voterID,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email=#{email,jdbcType=VARCHAR},
+            </if>
+            <if test="firstName != null">
+                firstName=#{firstName,jdbcType=VARCHAR},
+            </if>
+            <if test="middleName != null">
+                middleName=#{middleName,jdbcType=VARCHAR},
+            </if>
+            <if test="lastName != null">
+                lastName=#{lastName,jdbcType=VARCHAR},
+            </if>
+            <if test="nameSuffix != null">
+                nameSuffix=#{nameSuffix,jdbcType=VARCHAR},
+            </if>
+            <if test="cellphone != null">
+                cellphone=#{cellphone,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state=#{state,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                county=#{county,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city=#{city,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address=#{address,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where voterID=#{voterID}
+    </update>
+    <update id="updatePublicKey" >
+        update voters_certificates set Status=0 where VoterID=#{voterID};
+        insert into voters_certificates(VoterID,KeyType,PublicKey,EncryptKey,Status) values(#{voterID},#{keyType},#{publicKey},#{encryptKey},1);
+    </update>
+    <update id="updateAccessToken" >
+        update voters set AccessToken=#{accessToken} where ID=#{voterID};
+    </update>
+    <update id="updateWalletID">
+        update voters set WalletID = #{walletID} ,WalletPublicKey=#{publicKey},WalletPrivateKey=#{privateKey},WalletMSPID=#{mspID},WalletType=#{type},WalletVersion=#{version} where VoterID=#{voterID};
+    </update>
+    <update id="updatePhoto" >
+        update voters set Photo=#{photo} where  ID=#{id};
+        insert into voters_certificates(VoterID,PublicKey,Status) values(#{voterID},#{publicKey},1);
+    </update>
+    <update id="updateCertificate" >
+        update voters set CertificateType=#{type},Certificate=#{certificate} where ID=#{id};
+    </update>
+    <update id="approved" >
+        update voters set txid=#{txid}, Approved=#{approved},ApprovedDate=#{approvedDate} where  ID=#{id};
+    </update>
+    <delete id="deleteByID">
+        delete from voters_certificates where VoterID=#{id};
+        delete from voters where ID=#{id};
+    </delete>
+    <insert id="voted">
+        insert into voters_voted(ChainCode,txid,UserKey,BallotNumber,ElectionID,VotingDate) values(#{chainCode,jdbcType=VARCHAR},#{txid,jdbcType=VARCHAR},#{userKey,jdbcType=VARCHAR},#{ballotNumber,jdbcType=VARCHAR},#{electionID,jdbcType=VARCHAR},#{votingDate,jdbcType=DATE});
+    </insert>
+    <insert id="updateImage" useGeneratedKeys="true" keyColumn="id">
+        delete from voters_images where VoterID=#{voterID} and ImageType=#{type};
+        insert into voters_images(VoterID,ImageType,Image) values(#{voterID},#{type},#{image});
+    </insert>
+    <insert id="appendImage" useGeneratedKeys="true" keyColumn="id">
+        insert into voters_images(VoterID,ImageType,Image) select #{voterID},ImageType,Image from voters_images_temp where id=#{id};
+        delete from voters_images_temp where id=#{id};
+    </insert>
+    <select id="updateTempImage"  resultType="int">
+        insert into voters_images_temp(ImageKey,ImageType,Image) values(#{key},#{type},#{image});
+        select id from voters_images_temp where ImageKey=#{key};
+    </select>
+    <select id="checkVotingNumber" resultType="int">
+        select count(*) as ct from voted_result where VotingNumber=#{votingNumber}
+    </select>
+    <insert id="votedResult">
+        insert into voted_result(ChainCode,txid,VotingNumber,VerificationCode,`Key`,State,County,PrecinctNumber,ElectionID,SeatID,CandidateID,CandidateName,VotingDate)
+        values(#{chainCode,jdbcType=VARCHAR},#{txid,jdbcType=VARCHAR},#{votingNumber,jdbcType=VARCHAR},#{verificationCode,jdbcType=VARCHAR},#{key,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR},#{county,jdbcType=VARCHAR},
+        #{precinctNumber,jdbcType=VARCHAR},#{electionID,jdbcType=INTEGER},#{seatID,jdbcType=INTEGER},#{candidateID,jdbcType=INTEGER},#{candidateName,jdbcType=VARCHAR},
+        #{votingDate,jdbcType=DATE});
+    </insert>
+    <select id="getPrecinctIDByNumber" resultType="int">
+        SELECT id FROM dict_precincts  where state=Left(#{county},2) and county=right(#{county},length(#{county})-2) and number=#{number};
+    </select>
+</mapper>

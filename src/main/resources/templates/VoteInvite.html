@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vote Invite</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <style>
+        body {
+            height: 100%;
+            color: #777;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 1.5;
+            font-family: Helvetica Neue,Helvetica,Roboto,Segoe UI,Arial,sans-serif;
+            margin: 0px;
+        }
+        .OpenGuide-root {
+            display: none;
+            position: fixed;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 60px;
+            line-height: 60px;
+            width: 100%
+        }
+        .OpenGuide-root--hide {
+            -webkit-transform: translate3d(0,-60px,0);
+            transform: translate3d(0,-60px,0);
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            opacity: 0
+        }
+        .OpenGuide-root--show {
+            -webkit-transform: translate3d(0,0px,0);
+            transform: translate3d(0,0px,0);
+            -webkit-transition: all .5s;
+            transition: all .5s;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            opacity: 1
+        }
+        .OpenGuide-clickHint {
+            height: 60px;
+            opacity: 0
+        }
+        .OpenGuide-root--showClickHint {
+            -webkit-transform: translate3d(0,60px,0);
+            transform: translate3d(0,60px,0)
+        }
+        .OpenGuide-root--showClickHint .OpenGuide-clickHint {
+            -webkit-transition: all .5s;
+            transition: all .5s;
+            opacity: 1
+        }
+        .OpenGuide-root--showClickHint .OpenGuide-openHint {
+            -webkit-transition: all .5s;
+            transition: all .5s;
+            -webkit-transform: translate3d(0,-45px,0);
+            transform: translate3d(0,-45px,0);
+            opacity: 0;
+            position: relative;
+            z-index: -1
+        }
+        .OpenGuide-icon {
+            background-repeat: no-repeat;
+            vertical-align: middle;
+            display: none;
+            width: 16px;
+            height: 16px;
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzRweCIgaGVpZ2h0PSIxN3B4IiB2aWV3Qm94PSIwIDAgMzQgMTciIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMzg2LjAwMDAwMCwgLTEzLjAwMDAwMCkiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzODcuMDAwMDAwLCA3LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS0yIiB4PSIwIiB5PSIwIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0yLUNvcHktMiIgc3Ryb2tlPSIjNzc3Nzc3IiBzdHJva2Utd2lkdGg9IjMiIG9wYWNpdHk9IjAuODAwMjcxNzM5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMSA3LjYgMTYgMjEuMSAzMSA3LjYiPjwvcG9seWxpbmU+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPgo=);background-size: 16px 16px;
+            -webkit-animation: OpenGuide-arrow 1s linear infinite;
+            animation: OpenGuide-arrow 1s linear infinite;
+            margin-left: 12px
+        }
+        .OpenGuide-icon--show {
+            display: inline-block;
+        }
+        .OpenGuide-wrapper {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        .Download-root {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 83%;
+        }
+        .Footer-root {
+            background-image: -webkit-linear-gradient(rgba(255, 255, 255, .09) 74%, rgba(0, 156, 238, .3) 100%);
+            /* background-image: linear-gradient(rgba(255,255,255,.09) 74%,rgba(0,156,238,.3) 100%); */
+            height: 100%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: -1;
+        }
+        .Download-logo {
+            display: block;
+            width: 70px;
+            height: 70px;
+            background-image: url(templates/logo.png);
+            background-size: contain;
+            border-radius: 10px;
+        }
+        .Download-slogan {
+            margin-top: 28px;
+            font-size: 26px;
+            text-align: center;
+            padding: 0 10px;
+            letter-spacing: 4px;
+        }
+        .Download-link {
+            display: block;
+            width: 271px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 3px;
+            font-size: 18px;
+            text-align: center;
+            border: none;
+            text-decoration: none;
+        }
+        .Download-link:first-child {
+            background-color: #0f88eb;
+            margin-top: 28px;
+            color: #fff
+        }
+        .Download-link:not(:first-child) {
+            background-color: #fff;
+            border: 1px solid #0f88eb;
+            color: #0f88eb;
+            margin-top: 12px;
+            -webkit-transition: all .5s;
+            transition: all .5s
+        }
+        .Download-link:not(:first-child):active {
+            background: #e7f3fd
+        }
+        .Footer-image {
+            background-size: cover;
+            bottom: -44px;
+            height: 192px;
+            left: 50%;
+            margin-left: -145px;
+            position: fixed;
+            width: 290px;
+        }
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1040;
+            background-color: #000;
+            opacity: .5;
+        }
+        .modal ul {
+            list-style-type: decimal;
+            padding: 40px 25px;
+            border: 1px solid #333;
+            background: #FFF;
+        }
+        #showlist{
+            font-size: 14px;
+        }
+        @-webkit-keyframes OpenGuide-arrow {
+            0% {
+                -webkit-transform: translateY(-5px);
+                transform: translateY(-5px);
+                opacity: 0
+            }
+            50% {
+                -webkit-transform: translateY(0);
+                transform: translateY(0);
+                opacity: 1
+            }
+            100% {
+                -webkit-transform: translateY(5px);
+                transform: translateY(5px);
+                opacity: 0
+            }
+        }
+        @keyframes OpenGuide-arrow {
+            0% {
+                -webkit-transform: translateY(-5px);
+                transform: translateY(-5px);
+                opacity: 0
+            }
+            50% {
+                -webkit-transform: translateY(0);
+                transform: translateY(0);
+                opacity: 1
+            }
+            100% {
+                -webkit-transform: translateY(5px);
+                transform: translateY(5px);
+                opacity: 0
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="main" class="OpenGuide-wrapper" style="display: block;">
+        <div id="showlist" class="OpenGuide-root OpenGuide-root--show">
+            <div class="OpenGuide-clickHint">Not responding?
+                <a class="OpenGuide-clickHintLink" href="" onclick="openapp()">Click here to open the app</a>
+            </div>
+            <div class="OpenGuide-openHint">Already download?
+                <span id="guideText">Scroll down to open the app</span>
+                <span class="OpenGuide-icon OpenGuide-icon--show"></span>
+            </div>
+        </div>
+        <div class="Download-root">
+            <div class="Download-logo"></div>
+            <div class="Download-slogan">PAvatar Chain</div>
+            <div>
+                <a class="Download-link CopyInviteCode downloadLink" href="javascript:downLoad()">Download APP</a>
+            </div>
+        </div>
+        <div class="Footer-root">
+            <div class="Footer-image"></div>
+        </div>
+    </div>
+    <div class="modal fade modal-backdrop" id="DownTipModal" style="display: none">
+        <ul>
+            <li>Click the icon at the upper right-hand corner of the page. &nbsp;
+                <i class="iconfont icon-more4-andro"></i>
+                <i class="iconfont icon-more-ios"></i>
+            </li>
+            <li>Select open in browser
+            </li>
+        </ul>
+    </div>
+    <script>
+        var mobiletype = 'PC';
+        var IOSHttp = 'pachain://com.pachain.IOS';
+        var AndroidHttp = 'pachain://com.pachain.android';
+        var downLoad = function () {
+            if (mobiletype == "iphone") {
+                window.location.href = "itms-apps://itunes.apple.com/cn/app/id1281395207";
+            }
+            else if (mobiletype == "Android") {
+                window.location.href = "market://details?id=com.powervoter";
+            }
+        }
+        function MobileType() {
+            var ua = navigator.userAgent.toLowerCase();
+            var type = "PC";
+            if (/(iPhone|iPad|iPod|iOS)/i.test(ua)) {
+                type = "iphone";
+            } else if (/(Android)/i.test(ua)) {
+                type = "Android";
+            }
+            return type;
+        }
+        window.onload = function () {
+            Myslider.scroll(function () {
+                document.getElementById('showlist').classList.add('OpenGuide-root--showClickHint');
+            });
+            openapp();
+        }
+        function openapp() {
+            var mobilelink = window.location.href.replace(window.location.origin, '');
+            if(mobilelink.indexOf("?")>0){
+                mobilelink=mobilelink.substring(mobilelink.indexOf("?"))
+            }
+            mobilelink = decodeURI(convertSpecialCharacter(mobilelink));
+            if (mobiletype == "iphone") {
+                mobilelink = IOSHttp + mobilelink;
+                window.location.href = mobilelink;
+            }
+            else if (mobiletype == "Android") {
+                if(mobilelink=='/'){
+                    mobilelink += 'MainActivity';
+                }
+                mobilelink = AndroidHttp + mobilelink;
+                window.location.href = mobilelink;
+            }
+        }
+        function convertSpecialCharacter(str) {
+            var arrEntities = { 'lt': '<', 'gt': '>', 'nbsp': ' ', 'amp': '&', 'quot': '"' };
+            return str.replace(/&(lt|gt|nbsp|amp|quot);/ig, function (all, t) { return arrEntities[t]; });
+        }
+        mobiletype = MobileType();
+    </script>
+
+    <script>
+        var Myslider = {
+            touch: ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
+            $slider: document.getElementById('main'),
+            _call: undefined,
+            scroll: function (call) {
+                this.init();
+                this._call = call;
+            },
+            events: {
+                index: 0,
+                slider: this.$slider,
+                handleEvent: function (event) {
+                    this.slider = Myslider.$slider
+                    var self = this;
+                    if (event.type == 'touchstart') {
+                        self.start(event);
+
+                    } else if (event.type == 'touchmove') {
+                        self.move(event);
+
+                    } else if (event.type == 'touchend') {
+                        self.end(event);
+                    }
+                },
+                start: function (event) {
+                    var touch = event.targetTouches[0];
+                    startPos = { x: touch.pageX, y: touch.pageY, time: +new Date };
+                    isScrolling = 0;
+                    this.slider.addEventListener('touchmove', this, false);
+                    this.slider.addEventListener('touchend', this, false);
+                },
+                move: function (event) {
+                    if (event.targetTouches.length > 1 || event.scale && event.scale !== 1) return;
+                    var touch = event.targetTouches[0];
+                    endPos = { x: touch.pageX - startPos.x, y: touch.pageY - startPos.y };
+                    isScrolling = Math.abs(endPos.x) < Math.abs(endPos.y) ? 1 : 0;
+                    if (isScrolling === 1) {
+                        event.preventDefault();
+                    }
+                },
+                end: function (event) {
+                    var duration = +new Date - startPos.time;
+                    if (isScrolling === 1) {
+                        Myslider._call();
+                    }
+                    this.slider.removeEventListener('touchmove', this, false);
+                    this.slider.removeEventListener('touchend', this, false);
+                }
+            },
+            init: function () {
+                var self = this;
+                if (!!self.touch)
+                    self.$slider.addEventListener('touchstart', self.events, false);
+            }
+        };
+    </script>
+</body>
+</html>

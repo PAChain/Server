@@ -1,0 +1,76 @@
+{
+  "channel":"mychannel",
+  "chaincode": {
+    "voter": "user",
+    "endorsement":"MAJORITY",
+    "elections":[
+      {
+        "name": "base",
+        "ballot": "ballot",
+        "voted": "voted",
+        "endorsement":"MAJORITY"
+      }
+    ]
+  },
+  "orders": [
+    {
+      "name": "orderer.example.com",
+      "url": "grpcs://127.0.0.1:7050",
+      "tlsCACertFile": "D:\\wallet\\organizations\\ordererOrganizations\\example.com\\orderers\\orderer.example.com\\tls\\ca.crt"
+    }
+  ],
+  "organizations": [
+    {
+      "name": "Org1",
+      "mspid": "Org1MSP",
+      "ca": "ca.org1.example.com",
+      "adminName": "Admin",
+      "adminKeyFile": "D:\\wallet\\organizations\\peerOrganizations\\org1.example.com\\users\\Admin@org1.example.com\\msp\\keystore\\79964800a6ada7e68d2302590404904d0878aafa3a721d668d74d365a3a5df9d_sk",
+      "adminCertFile": "D:\\wallet\\organizations\\peerOrganizations\\org1.example.com\\users\\Admin@org1.example.com\\msp\\signcerts\\cert.pem",
+      "userName": "",
+      "userKeyFile": "",
+      "userCertFile": "",
+      "peers": [
+          {
+            "name":"peer0.org1.example.com",
+             "url": "grpcs://127.0.0.1:7051",
+             "tlsCACertFile": "D:\\wallet\\organizations\\peerOrganizations\\org1.example.com\\peers\\peer0.org1.example.com\\tls\\ca.crt",
+             "tlsClientKeyFile": "D:\\wallet\\organizations\\peerOrganizations\\org1.example.com\\peers\\peer0.org1.example.com\\tls\\server.key",
+             "tlsClientCertFile": "D:\\wallet\\organizations\\peerOrganizations\\org1.example.com\\peers\\peer0.org1.example.com\\tls\\server.crt"
+          }
+        ]
+    },
+    {
+      "name": "Org2",
+      "mspid": "Org2MSP",
+      "ca": "ca.org2.example.com",
+      "adminName": "Admin",
+      "adminKeyFile": "D:\\wallet\\organizations\\peerOrganizations\\org2.example.com\\users\\Admin@org2.example.com\\msp\\keystore\\3cc156f08b3d4888292fd24dd4d18b4891efacb646bec60ade05cbf5f347db71_sk",
+      "adminCertFile": "D:\\wallet\\organizations\\peerOrganizations\\org2.example.com\\users\\Admin@org2.example.com\\msp\\signcerts\\cert.pem",
+      "userName": "",
+      "userKeyFile": "",
+      "userCertFile": "",
+      "peers": [
+        {
+          "name":"peer0.org2.example.com",
+          "url": "grpcs://127.0.0.1:9051",
+          "tlsCACertFile": "D:\\wallet\\organizations\\peerOrganizations\\org2.example.com\\peers\\peer0.org2.example.com\\tls\\ca.crt",
+          "tlsClientKeyFile": "D:\\wallet\\organizations\\peerOrganizations\\org2.example.com\\peers\\peer0.org2.example.com\\tls\\server.key",
+          "tlsClientCertFile": "D:\\wallet\\organizations\\peerOrganizations\\org2.example.com\\peers\\peer0.org2.example.com\\tls\\server.crt"
+        }
+      ]
+    }
+  ],
+  "certificateAuthorities": [
+    {
+      "name":"ca.org1.example.com",
+      "url": "https://127.0.0.1:7054",
+      "certFile": "D:\\wallet\\organizations\\peerOrganizations\\org1.example.com\\ca\\ca.org1.example.com-cert.pem"
+    },
+    {
+      "name":"ca.org2.example.com",
+      "url": "https://127.0.0.1:8054",
+      "certFile": "D:\\wallet\\organizations\\peerOrganizations\\org2.example.com\\ca\\ca.org2.example.com-cert.pem"
+    }
+  ]
+}
